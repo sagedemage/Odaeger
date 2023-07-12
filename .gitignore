@@ -1,0 +1,15 @@
+zig-cache 
+zig-out
+
+# Production directory
+prod/*
+!prod/build.sh
+!prod/player.png  
+!prod/test.ogg
+
+*.kra
+*.kra*
+*.aup3
+*.mscz
+.mscbackup/
+
