@@ -9,8 +9,6 @@ const std = @import("std");
 
 const level_width: i32 = 640;
 const level_height: i32 = 400;
-const screen_width: u32 = 800;
-const screen_height: u32 = 450;
 const player_width: u32 = 40;
 const player_height: u32 = 40;
 const player_speed: u32 = 2;
