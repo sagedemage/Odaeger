@@ -30,7 +30,7 @@ pub fn main() !void {
     }
 
     // Create window
-    const window: ?*c.SDL_Window = c.SDL_CreateWindow("SDL2 Window", c.SDL_WINDOWPOS_CENTERED, c.SDL_WINDOWPOS_CENTERED, level_width, level_height, 0);
+    const window: ?*c.SDL_Window = c.SDL_CreateWindow("Odaeger", c.SDL_WINDOWPOS_CENTERED, c.SDL_WINDOWPOS_CENTERED, level_width, level_height, 0);
     defer c.SDL_DestroyWindow(window);
 
     // Initialize SDL_mixer
