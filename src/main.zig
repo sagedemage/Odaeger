@@ -15,11 +15,7 @@ const player_speed: u32 = 2;
 const chunksize: u32 = 1024;
 const music_volume: u32 = 64; // 128
 
-const Player = struct {
-    srcrect: c.SDL_Rect,
-    dstrect: c.SDL_Rect,
-    texture: ?*c.SDL_Texture,
-};
+const Player = struct { srcrect: c.SDL_Rect, dstrect: c.SDL_Rect, texture: ?*c.SDL_Texture, speed: c_int };
 
 pub fn main() !void {
     const sdl_status: c_int = c.SDL_Init(c.SDL_INIT_VIDEO);
@@ -59,7 +55,7 @@ pub fn main() !void {
     const player_srcrect: c.SDL_Rect = c.SDL_Rect{ .x = 0, .y = 0, .w = player_width, .h = player_height };
     var player_dstrect: c.SDL_Rect = c.SDL_Rect{ .x = 20, .y = 20, .w = player_width, .h = player_height };
 
-    var player = Player{ .srcrect = player_srcrect, .dstrect = player_dstrect, .texture = player_texture };
+    var player = Player{ .srcrect = player_srcrect, .dstrect = player_dstrect, .texture = player_texture, .speed = player_speed };
 
     // [ Red, Green, Blue, Alpha ]
     _ = c.SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
@@ -91,16 +87,16 @@ pub fn main() !void {
         // Hold Movement Keybindings
         var state: [*]const u8 = c.SDL_GetKeyboardState(null);
         if (state[c.SDL_SCANCODE_RIGHT] == 1) {
-            player.dstrect.x += player_speed;
+            player.dstrect.x += player.speed;
         }
         if (state[c.SDL_SCANCODE_LEFT] == 1) {
-            player.dstrect.x -= player_speed;
+            player.dstrect.x -= player.speed;
         }
         if (state[c.SDL_SCANCODE_DOWN] == 1) {
-            player.dstrect.y += player_speed;
+            player.dstrect.y += player.speed;
         }
         if (state[c.SDL_SCANCODE_UP] == 1) {
-            player.dstrect.y -= player_speed;
+            player.dstrect.y -= player.speed;
         }
 
         // Player boundaries
