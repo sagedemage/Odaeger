@@ -9,8 +9,8 @@ const std = @import("std");
 
 const LEVEL_WIDTH: i32 = 640;
 const LEVEL_HEIGHT: i32 = 400;
-const PLAYER_WIDTH: u32 = 40;
-const PLAYER_HEIGHT: u32 = 40;
+const PLAYER_WIDTH: u32 = 20;
+const PLAYER_HEIGHT: u32 = 20;
 const PLAYER_SPEED: u32 = 2;
 
 const Player = struct { srcrect: c.SDL_Rect, dstrect: c.SDL_Rect, texture: ?*c.SDL_Texture, speed: c_int };
