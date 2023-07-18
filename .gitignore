@@ -11,5 +11,8 @@ prod/*
 *.kra*
 *.aup3
 *.mscz
+
+# Cache files
 .mscbackup/
+*.*~
 

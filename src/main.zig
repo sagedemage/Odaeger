@@ -9,8 +9,8 @@ const std = @import("std");
 
 const LEVEL_WIDTH: i32 = 640;
 const LEVEL_HEIGHT: i32 = 400;
-const PLAYER_WIDTH: u32 = 40;
-const PLAYER_HEIGHT: u32 = 40;
+const PLAYER_WIDTH: u32 = 20;
+const PLAYER_HEIGHT: u32 = 20;
 const PLAYER_SPEED: u32 = 2;
 
 const Player = struct { srcrect: c.SDL_Rect, dstrect: c.SDL_Rect, texture: ?*c.SDL_Texture, speed: c_int };
@@ -19,34 +19,38 @@ pub fn main() !void {
     const chunksize: u32 = 1024;
     const music_volume: u32 = 64; // MAX Volume: 128
 
-    const sdl_status: c_int = c.SDL_Init(c.SDL_INIT_VIDEO);
+    // Initialize the SDL library
+    try std.testing.expect(c.SDL_Init(c.SDL_INIT_VIDEO) != -1);
     defer c.SDL_Quit();
-
-    if (sdl_status == -1) {
-        std.debug.print("SDL_Init Error\n", .{});
-    }
 
     // Create window
     const window: ?*c.SDL_Window = c.SDL_CreateWindow("Odaeger", c.SDL_WINDOWPOS_CENTERED, c.SDL_WINDOWPOS_CENTERED, LEVEL_WIDTH, LEVEL_HEIGHT, 0);
     defer c.SDL_DestroyWindow(window);
 
     // Initialize SDL_mixer
-    const open_audio: c_int = c.Mix_OpenAudio(c.MIX_DEFAULT_FREQUENCY, c.MIX_DEFAULT_FORMAT, 2, chunksize);
+    try std.testing.expect(c.Mix_OpenAudio(c.MIX_DEFAULT_FREQUENCY, c.MIX_DEFAULT_FORMAT, 2, chunksize) != -1);
     defer c.Mix_CloseAudio();
-
-    if (open_audio == -1) {
-        std.debug.print("Mix_OpenAudio Error\n", .{});
-    }
 
     // Create renderer
     const rend: ?*c.SDL_Renderer = c.SDL_CreateRenderer(window, 0, c.SDL_RENDERER_ACCELERATED);
     defer c.SDL_DestroyRenderer(rend);
 
     const music: ?*c.Mix_Music = c.Mix_LoadMUS("assets/music/test.ogg");
+    defer c.Mix_FreeMusic(music);
+
+    std.testing.expect(music != null) catch |err| {
+        std.debug.print("Mix_LoadMUS Error {any}\n", .{err});
+        return;
+    };
 
     // Create player surface
-    const player_surface: [*]c.SDL_Surface = c.IMG_Load("assets/art/player.png");
+    const player_surface: ?[*]c.SDL_Surface = c.IMG_Load("assets/art/player.png");
     defer c.SDL_FreeSurface(player_surface);
+
+    std.testing.expect(player_surface != null) catch |err| {
+        std.debug.print("SDL_Load Error {any}\n", .{err});
+        return;
+    };
 
     // Create player texture
     const player_texture: ?*c.SDL_Texture = c.SDL_CreateTextureFromSurface(rend, player_surface);
@@ -64,11 +68,12 @@ pub fn main() !void {
     _ = c.Mix_VolumeMusic(music_volume);
 
     // Start background music (-1 means infinity)
-    const music_status: c_int = c.Mix_PlayMusic(music, -1);
+    const play_music_status: c_int = c.Mix_PlayMusic(music, -1);
 
-    if (music_status == -1) {
-        std.debug.print("Mix_PlayMusic Error\n", .{});
-    }
+    std.testing.expect(play_music_status != -1) catch |err| {
+        std.debug.print("Mix_PlayMusic Error {any}\n", .{err});
+        return;
+    };
 
     mainloop: while (true) {
         // Game loop
