@@ -68,9 +68,9 @@ pub fn main() !void {
     _ = c.Mix_VolumeMusic(music_volume);
 
     // Start background music (-1 means infinity)
-    const music_status: c_int = c.Mix_PlayMusic(music, -1);
+    const play_music_status: c_int = c.Mix_PlayMusic(music, -1);
 
-    std.testing.expect(music_status != -1) catch |err| {
+    std.testing.expect(play_music_status != -1) catch |err| {
         std.debug.print("Mix_PlayMusic Error {any}\n", .{err});
         return;
     };
